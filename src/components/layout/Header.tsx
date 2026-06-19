@@ -4,6 +4,9 @@ import { Search, MapPin, User, Heart, ShoppingBag, X } from 'lucide-react';
 import dropdownModel from '../../assets/dropdown_model.png';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
+import { MOCK_PRODUCTS } from '../../data/mockData';
+import type { Product } from '../../types';
+
 
 interface HeaderProps {
   cartCount: number;
@@ -11,6 +14,7 @@ interface HeaderProps {
   onPageChange: (page: string) => void;
   currentPage: string;
   onSearch: (query: string) => void;
+  onSelectProduct?: (product: Product) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,11 +23,22 @@ export const Header: React.FC<HeaderProps> = ({
   onPageChange,
   currentPage,
   onSearch,
+  onSelectProduct,
 }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, tProduct } = useLanguage();
   const { wishlistCount } = useCart();
+
+  const suggestedProducts = searchQuery.trim()
+    ? MOCK_PRODUCTS.filter((p) => {
+        const q = searchQuery.toLowerCase();
+        const matchEn = p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+        const matchVi = (p.nameVi && p.nameVi.toLowerCase().includes(q)) || (p.categoryVi && p.categoryVi.toLowerCase().includes(q));
+        return matchEn || matchVi;
+      }).slice(0, 5)
+    : [];
+
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -428,7 +443,7 @@ export const Header: React.FC<HeaderProps> = ({
               animation: 'slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
               padding: '24px 0'
             }}>
-              <div className="container" style={{ display: 'flex', alignItems: 'center', padding: '0 48px' }}>
+              <div className="container" style={{ display: 'flex', flexDirection: 'column', padding: '0 48px' }}>
                 <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
                   <Search size={22} style={{ color: 'var(--color-text-primary)', marginRight: '16px' }} />
                   <input
@@ -469,6 +484,62 @@ export const Header: React.FC<HeaderProps> = ({
                     <X size={22} />
                   </button>
                 </form>
+
+                {/* Autocomplete Suggestions Dropdown List */}
+                {suggestedProducts.length > 0 && (
+                  <div style={{
+                    marginTop: '20px',
+                    borderTop: '1px solid var(--color-border)',
+                    paddingTop: '20px',
+                    textAlign: 'left',
+                    width: '100%'
+                  }}>
+                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--color-text-light)', marginBottom: '14px', fontWeight: 600 }}>
+                      {language === 'vi' ? 'Gợi ý sản phẩm' : 'Suggested Products'}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {suggestedProducts.map(product => {
+                        const localized = tProduct(product);
+                        return (
+                          <div 
+                            key={product.id}
+                            onClick={() => {
+                              if (onSelectProduct) {
+                                onSelectProduct(product);
+                              }
+                              setSearchQuery('');
+                              setSearchOpen(false);
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '16px',
+                              cursor: 'pointer',
+                              padding: '8px 12px',
+                              borderRadius: '2px',
+                              transition: 'background-color var(--transition-fast)'
+                            }}
+                            className="suggestion-item"
+                          >
+                            <img 
+                              src={product.image} 
+                              alt={localized.name} 
+                              style={{ width: '40px', height: '48px', objectFit: 'cover', borderRadius: '1px' }}
+                            />
+                            <div>
+                              <div style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
+                                {localized.name}
+                              </div>
+                              <div style={{ fontSize: '13px', color: 'var(--color-text-light)', marginTop: '2px' }}>
+                                ${product.price}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </>
@@ -477,13 +548,13 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Styled mega menu links */}
       <style>{`
-        .mega-menu-link:hover {
-          color: var(--color-accent-gold) !important;
-          text-decoration: underline;
-          text-underline-offset: 4px;
-        }
-        .stores-link:hover {
+        .mega-menu-link:hover, .stores-link:hover {
           color: var(--color-accent-gold);
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+        .suggestion-item:hover {
+          background-color: var(--color-card-bg);
         }
         @media (max-width: 900px) {
           .header-nav {

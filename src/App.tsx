@@ -113,6 +113,7 @@ function AppContent() {
         currentPage={currentPage}
         onPageChange={handlePageChange}
         onSearch={handleSearch}
+        onSelectProduct={handleProductSelect}
       />
 
       {/* Main Dynamic View Content */}
