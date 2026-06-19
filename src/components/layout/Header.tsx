@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, MapPin, User, Heart, ShoppingBag } from 'lucide-react';
+import { Search, MapPin, User, Heart, ShoppingBag, X } from 'lucide-react';
+
 import dropdownModel from '../../assets/dropdown_model.png';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
@@ -295,53 +296,25 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Right Utilities Section */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
-            {/* Inline Search Bar */}
-            <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-              <input
-                type="text"
-                placeholder={t('search_placeholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: searchOpen ? '160px' : '0px',
-                  opacity: searchOpen ? 1 : 0,
-                  padding: searchOpen ? '6px 12px 6px 30px' : '0px',
-                  border: searchOpen ? '1px solid var(--color-border)' : 'none',
-                  borderRadius: '2px',
-                  outline: 'none',
-                  fontSize: '12px',
-                  fontFamily: 'var(--font-sans)',
-                  transition: 'all var(--transition-fast)',
-                  backgroundColor: 'var(--color-card-bg)'
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if (searchOpen && searchQuery.trim()) {
-                    onSearch(searchQuery);
-                    onPageChange('search-results');
-                    setSearchOpen(false);
-                  } else {
-                    setSearchOpen(!searchOpen);
-                  }
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--color-text-primary)',
-                  position: searchOpen ? 'absolute' : 'static',
-                  left: searchOpen ? '8px' : 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                aria-label="Search"
-              >
-                <Search size={19} />
-              </button>
-            </form>
+            {/* Search Icon Trigger */}
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--color-text-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '4px'
+              }}
+              aria-label="Open search drawer"
+            >
+              <Search size={19} />
+            </button>
+
 
             {/* Stores link */}
             <div 
@@ -422,6 +395,84 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Full-Width Search Drawer (matching Search - desktop.png) */}
+        {searchOpen && (
+          <>
+            {/* Dimmed Background Overlay */}
+            <div 
+              onClick={() => setSearchOpen(false)}
+              style={{
+                position: 'fixed',
+                top: '112px', /* Height of announcement bar (36px) + header (76px) */
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                zIndex: 90,
+                animation: 'fadeIn 0.2s ease',
+                backdropFilter: 'blur(1px)'
+              }}
+            />
+
+            {/* Full-Width White Search Bar */}
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              width: '100%',
+              backgroundColor: '#ffffff',
+              borderBottom: '1px solid var(--color-border)',
+              boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
+              zIndex: 95,
+              animation: 'slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              padding: '24px 0'
+            }}>
+              <div className="container" style={{ display: 'flex', alignItems: 'center', padding: '0 48px' }}>
+                <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
+                  <Search size={22} style={{ color: 'var(--color-text-primary)', marginRight: '16px' }} />
+                  <input
+                    type="text"
+                    placeholder={t('search_placeholder')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                    style={{
+                      width: '100%',
+                      border: 'none',
+                      outline: 'none',
+                      fontSize: '18px',
+                      fontFamily: 'var(--font-sans)',
+                      color: 'var(--color-text-primary)',
+                      padding: '8px 0',
+                      backgroundColor: 'transparent'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSearchOpen(false)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'var(--color-text-primary)',
+                      padding: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginLeft: '16px',
+                      transition: 'opacity 0.2s ease'
+                    }}
+                    className="search-close-btn"
+                    aria-label="Close search"
+                  >
+                    <X size={22} />
+                  </button>
+                </form>
+              </div>
+            </div>
+          </>
+        )}
       </header>
 
       {/* Styled mega menu links */}
