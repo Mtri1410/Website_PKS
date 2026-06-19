@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import promoModel from '../../assets/promo_model.png';
+import promoModel from '../../assets/promo_model.webp';
 import { useLanguage } from '../../context/LanguageContext';
 
 interface NewsletterPopupProps {

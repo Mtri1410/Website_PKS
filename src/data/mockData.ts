@@ -1,16 +1,16 @@
 import type { Product } from '../types';
-import blazerImg from '../assets/product_blazer.png';
-import cardiganImg from '../assets/product_cardigan.png';
-import pantsImg from '../assets/product_pants.png';
-import classicPantImg from '../assets/product_classic_pant.png';
-import maxiSkirtImg from '../assets/product_maxi_skirt.png';
-import cashmereSweaterImg from '../assets/product_cashmere_sweater.png';
-import oversizedShirtImg from '../assets/product_oversized_shirt.png';
-import funnelNeckImg from '../assets/product_funnel_neck.png';
-import cashmereCardiganImg from '../assets/product_cashmere_cardigan.png';
-import turtleneckImg from '../assets/product_turtleneck.png';
-import drapedSkirtImg from '../assets/product_draped_skirt.png';
-import shortsImg from '../assets/product_shorts.png';
+import blazerImg from '../assets/product_blazer.webp';
+import cardiganImg from '../assets/product_cardigan.webp';
+import pantsImg from '../assets/product_pants.webp';
+import classicPantImg from '../assets/product_classic_pant.webp';
+import maxiSkirtImg from '../assets/product_maxi_skirt.webp';
+import cashmereSweaterImg from '../assets/product_cashmere_sweater.webp';
+import oversizedShirtImg from '../assets/product_oversized_shirt.webp';
+import funnelNeckImg from '../assets/product_funnel_neck.webp';
+import cashmereCardiganImg from '../assets/product_cashmere_cardigan.webp';
+import turtleneckImg from '../assets/product_turtleneck.webp';
+import drapedSkirtImg from '../assets/product_draped_skirt.webp';
+import shortsImg from '../assets/product_shorts.webp';
 
 export const MOCK_PRODUCTS: Product[] = [
   {
@@ -45,7 +45,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Dry clean only. Hang on a wide wooden hanger to maintain shoulder structure.',
     howToUseVi: 'Chỉ giặt khô. Treo trên móc gỗ bản rộng để giữ phom dáng vai.',
     ingredients: 'Outer: 80% Virgin Wool, 20% Nylon. Lining: 100% Viscose.',
-    ingredientsVi: 'Vải ngoài: 80% Len nguyên chất, 20% Nylon. Vải lót: 100% Viscose.'
+    ingredientsVi: 'Vải ngoài: 80% Len nguyên chất, 20% Nylon. Vải lót: 100% Viscose.',
+    material: 'Pima',
+    materialVi: 'Len Pima'
   },
   {
     id: 'c2',
@@ -80,7 +82,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Hand wash cold. Lay flat to dry. Do not hang knitwear to prevent stretching.',
     howToUseVi: 'Giặt tay bằng nước lạnh. Trải phẳng để khô. Không treo móc để tránh giãn len.',
     ingredients: '70% Baby Alpaca, 23% Polyamide, 7% Merino Wool.',
-    ingredientsVi: '70% Baby Alpaca, 23% Polyamide, 7% Len Merino.'
+    ingredientsVi: '70% Baby Alpaca, 23% Polyamide, 7% Len Merino.',
+    material: 'Pima',
+    materialVi: 'Len Pima'
   },
   {
     id: 'c3',
@@ -113,7 +117,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Hand wash cold with delicate detergent or dry clean. Iron inside out on low silk setting.',
     howToUseVi: 'Giặt tay bằng nước lạnh với nước giặt dịu nhẹ hoặc giặt khô. Ủi mặt trái ở chế độ lụa thấp.',
     ingredients: '100% Mulberry Silk.',
-    ingredientsVi: '100% Lụa tơ tằm Mulberry.'
+    ingredientsVi: '100% Lụa tơ tằm Mulberry.',
+    material: 'Silk',
+    materialVi: 'Lụa'
   },
   {
     id: 'c4',
@@ -148,7 +154,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Machine wash cold on gentle cycle. Hang dry immediately. Warm iron if necessary.',
     howToUseVi: 'Giặt máy bằng nước lạnh với chu kỳ nhẹ nhàng. Treo khô ngay. Ủi ấm nếu cần.',
     ingredients: '68% Polyester, 29% Viscose, 3% Elastane.',
-    ingredientsVi: '68% Polyester, 29% Viscose, 3% Elastane.'
+    ingredientsVi: '68% Polyester, 29% Viscose, 3% Elastane.',
+    material: 'Cotton',
+    materialVi: 'Cotton'
   },
   {
     id: 'c5',
@@ -181,7 +189,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Dry clean recommended. Cool iron on reverse if required.',
     howToUseVi: 'Khuyến nghị giặt khô. Ủi mặt trái ở nhiệt độ thấp nếu cần.',
     ingredients: '75% Acetate, 25% Polyester. Lining: 100% Polyester.',
-    ingredientsVi: '75% Acetate, 25% Polyester. Lót: 100% Polyester.'
+    ingredientsVi: '75% Acetate, 25% Polyester. Lót: 100% Polyester.',
+    material: 'Cotton',
+    materialVi: 'Cotton'
   },
   {
     id: 'c6',
@@ -215,7 +225,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Dry clean or hand wash in cold water using specialty cashmere wash. Flat dry.',
     howToUseVi: 'Giặt khô hoặc giặt tay bằng nước lạnh với nước giặt chuyên dụng cho cashmere. Trải phẳng để khô.',
     ingredients: '100% Single-Origin Cashmere.',
-    ingredientsVi: '100% Cashmere nguyên bản.'
+    ingredientsVi: '100% Cashmere nguyên bản.',
+    material: 'Pima',
+    materialVi: 'Len Pima'
   },
   {
     id: 'c7',
@@ -249,7 +261,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Machine wash warm. Tumble dry low or hang dry. Steam iron for a crisp finish.',
     howToUseVi: 'Giặt máy nước ấm. Sấy khô ở chế độ thấp hoặc treo khô. Ủi hơi nước để áo phẳng phiu.',
     ingredients: '100% Organic Cotton.',
-    ingredientsVi: '100% Cotton hữu cơ.'
+    ingredientsVi: '100% Cotton hữu cơ.',
+    material: 'Cotton',
+    materialVi: 'Cotton'
   },
   {
     id: 'c8',
@@ -282,7 +296,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Hand wash cold. Lay flat on dry towel. Fold instead of hanging to preserve shape.',
     howToUseVi: 'Giặt tay bằng nước lạnh. Trải phẳng trên khăn khô. Gấp gọn thay vì treo để giữ phom dáng.',
     ingredients: '100% Cashmere.',
-    ingredientsVi: '100% Cashmere.'
+    ingredientsVi: '100% Cashmere.',
+    material: 'Pima',
+    materialVi: 'Len Pima'
   },
   {
     id: 'c9',
@@ -315,7 +331,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Delicate hand wash inside out. Lay flat. Dry cleanable.',
     howToUseVi: 'Giặt tay nhẹ nhàng mặt trái. Trải phẳng để khô. Có thể giặt khô.',
     ingredients: '100% Cashmere.',
-    ingredientsVi: '100% Cashmere.'
+    ingredientsVi: '100% Cashmere.',
+    material: 'Pima',
+    materialVi: 'Len Pima'
   },
   {
     id: 'c10',
@@ -348,7 +366,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Machine wash cold on delicate. Lay flat to dry or hang. Cool iron if needed.',
     howToUseVi: 'Giặt máy bằng nước lạnh với chế độ nhẹ nhàng. Trải phẳng hoặc treo khô. Ủi ấm nếu cần.',
     ingredients: '50% Cotton, 50% Modal.',
-    ingredientsVi: '50% Cotton, 50% Modal.'
+    ingredientsVi: '50% Cotton, 50% Modal.',
+    material: 'Cotton',
+    materialVi: 'Cotton'
   },
   {
     id: 'c11',
@@ -381,7 +401,9 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Dry clean recommended. Cool iron reverse or dry steam with a cloth shield.',
     howToUseVi: 'Khuyến nghị giặt khô. Ủi mặt trái ở nhiệt độ thấp hoặc ủi hơi nước khô qua một lớp vải bảo vệ.',
     ingredients: '100% Mulberry Silk.',
-    ingredientsVi: '100% Lụa tơ tằm Mulberry.'
+    ingredientsVi: '100% Lụa tơ tằm Mulberry.',
+    material: 'Silk',
+    materialVi: 'Lụa'
   },
   {
     id: 'c12',
@@ -414,6 +436,8 @@ export const MOCK_PRODUCTS: Product[] = [
     howToUse: 'Machine wash cold in mesh bag on gentle. Air dry flat.',
     howToUseVi: 'Giặt máy nước lạnh với túi giặt ở chế độ nhẹ nhàng. Phơi khô trên mặt phẳng.',
     ingredients: '100% Polyester Charmeuse.',
-    ingredientsVi: '100% Satin Polyester.'
+    ingredientsVi: '100% Satin Polyester.',
+    material: 'Pima',
+    materialVi: 'Len Pima'
   }
 ];

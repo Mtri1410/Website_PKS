@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Star, ShoppingBag } from 'lucide-react';
 import type { Product, ColorOption } from '../types';
 import { MOCK_PRODUCTS } from '../data/mockData';
-import dropdownModel from '../assets/dropdown_model.png';
-import promoModel from '../assets/promo_model.png';
+import dropdownModel from '../assets/dropdown_model.webp';
+import promoModel from '../assets/promo_model.webp';
 import { useLanguage } from '../context/LanguageContext';
 
 interface ProductDetailProps {
@@ -12,6 +12,19 @@ interface ProductDetailProps {
   onAddToBag: (product: Product, size: string, color: ColorOption, qty: number) => void;
   onSelectProduct: (product: Product) => void;
 }
+
+const colorTranslationMap: Record<string, string> = {
+  'Oatmeal': 'Màu yến mạch',
+  'Black': 'Màu đen',
+  'Light Blue': 'Xanh nhạt',
+  'Grey': 'Màu xám',
+  'Sand': 'Màu cát',
+  'Brown': 'Màu nâu',
+  'Champagne': 'Sâm-panh',
+  'White': 'Màu trắng',
+  'Blue': 'Màu xanh',
+  'Dark Brown': 'Nâu sẫm'
+};
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({
   product,
@@ -56,19 +69,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     return `$${price}`;
   };
 
-  const colorTranslationMap: Record<string, string> = {
-    'Oatmeal': 'Màu yến mạch',
-    'Black': 'Màu đen',
-    'Light Blue': 'Xanh nhạt',
-    'Grey': 'Màu xám',
-    'Sand': 'Màu cát',
-    'Brown': 'Màu nâu',
-    'Champagne': 'Sâm-panh',
-    'White': 'Màu trắng',
-    'Blue': 'Màu xanh',
-    'Dark Brown': 'Nâu sẫm'
-  };
-
   const localized = tProduct(product);
 
   return (
@@ -94,10 +94,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <img src={product.image} alt={localized.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div className="gallery-img-box" style={{ backgroundColor: 'var(--color-card-bg)', aspectRatio: '1 / 1.25', borderRadius: '2px', overflow: 'hidden', filter: 'brightness(97%)' }}>
-                <img src={product.image} alt={`${localized.name} model view`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={product.image} alt={`${localized.name} model view`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
               </div>
               <div className="gallery-img-box" style={{ backgroundColor: 'var(--color-card-bg)', aspectRatio: '1 / 1.25', borderRadius: '2px', overflow: 'hidden', filter: 'brightness(94%)' }}>
-                <img src={product.image} alt={`${localized.name} details view`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={product.image} alt={`${localized.name} details view`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
               </div>
             </div>
           </div>
@@ -310,10 +310,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }} className="editorial-grid">
           <div style={{ aspectRatio: '1.1 / 1', overflow: 'hidden', backgroundColor: 'var(--color-card-bg)' }}>
-            <img src={dropdownModel} alt="Model Editorial 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={dropdownModel} alt="Model Editorial 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
           </div>
           <div style={{ aspectRatio: '1.1 / 1', overflow: 'hidden', backgroundColor: 'var(--color-card-bg)' }}>
-            <img src={promoModel} alt="Model Editorial 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={promoModel} alt="Model Editorial 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
           </div>
         </div>
       </section>
@@ -380,7 +380,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             return (
               <div key={p.id} className="product-card" onClick={() => onSelectProduct(p)}>
                 <div className="product-image-container">
-                  <img src={p.image} alt={pLocalized.name} className="product-image" />
+                  <img src={p.image} alt={pLocalized.name} className="product-image" loading="lazy" />
                   <button className="quick-add-btn" onClick={(e) => { e.stopPropagation(); onAddToBag(p, p.sizes[0], p.colors[0], 1); }}><ShoppingBag size={18} /></button>
                 </div>
                 <div className="product-info" style={{ textAlign: 'left' }}>
@@ -404,7 +404,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             return (
               <div key={p.id} className="product-card" onClick={() => onSelectProduct(p)}>
                 <div className="product-image-container">
-                  <img src={p.image} alt={pLocalized.name} className="product-image" />
+                  <img src={p.image} alt={pLocalized.name} className="product-image" loading="lazy" />
                   <button className="quick-add-btn" onClick={(e) => { e.stopPropagation(); onAddToBag(p, p.sizes[0], p.colors[0], 1); }}><ShoppingBag size={18} /></button>
                 </div>
                 <div className="product-info" style={{ textAlign: 'left' }}>

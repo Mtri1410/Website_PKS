@@ -25,6 +25,8 @@ export interface Product {
   howToUseVi?: string;
   ingredients?: string;
   ingredientsVi?: string;
+  material?: string;
+  materialVi?: string;
 }
 
 export interface CartItem {

@@ -1,10 +1,55 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ChevronDown, Heart, ShoppingBag } from 'lucide-react';
+import { ChevronDown, Heart, ShoppingBag, X } from 'lucide-react';
 import type { Product, ColorOption } from '../types';
 import { MOCK_PRODUCTS } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 
+// Helper lists and mappings defined outside component to optimize performance
+const allCategories = ['Outerwear', 'Skirts', 'Pants & Leggings', 'Lounge'];
+
+const categoryKeyMap: Record<string, string> = {
+  'Outerwear': 'Áo khoác',
+  'Skirts': 'Chân váy',
+  'Pants & Leggings': 'Quần dài',
+  'Lounge': 'Đồ mặc nhà & Đồ len'
+};
+
+const colorTranslationMap: Record<string, string> = {
+  'Oatmeal': 'Màu yến mạch',
+  'Black': 'Màu đen',
+  'Light Blue': 'Xanh nhạt',
+  'Grey': 'Màu xám',
+  'Sand': 'Màu cát',
+  'Brown': 'Màu nâu',
+  'Champagne': 'Sâm-panh',
+  'White': 'Màu trắng',
+  'Blue': 'Màu xanh',
+  'Dark Brown': 'Nâu sẫm'
+};
+
+const allColors = [
+  { name: 'Oatmeal', hex: '#E2D3C1' },
+  { name: 'Black', hex: '#111111' },
+  { name: 'Light Blue', hex: '#8FA9C4' },
+  { name: 'Grey', hex: '#808080' },
+  { name: 'Sand', hex: '#E8C39E' },
+  { name: 'Brown', hex: '#A07855' }
+];
+
+const sizeDetails = [
+  { key: 'XS', labelEn: 'Extra Small', labelVi: 'Cực nhỏ' },
+  { key: 'S', labelEn: 'Small', labelVi: 'Nhỏ' },
+  { key: 'M', labelEn: 'Medium', labelVi: 'Trung bình' },
+  { key: 'L', labelEn: 'Large', labelVi: 'Lớn' },
+  { key: 'XL', labelEn: 'Extra Large', labelVi: 'Cực lớn' }
+];
+
+const materialDetails = [
+  { key: 'Cotton', labelEn: 'Cotton', labelVi: 'Cotton' },
+  { key: 'Pima', labelEn: 'Pima', labelVi: 'Pima' },
+  { key: 'Silk', labelEn: 'Silk', labelVi: 'Silk' }
+];
 
 interface ProductListProps {
   onQuickView?: (product: Product) => void;
@@ -23,17 +68,27 @@ export const ProductList: React.FC<ProductListProps> = ({
   onClearSearch,
   onSelectProduct
 }) => {
-
   const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
   const [sizeFilter, setSizeFilter] = useState<string[]>([]);
   const [colorFilter, setColorFilter] = useState<string[]>([]);
-  const [maxPrice, setMaxPrice] = useState(400); // Max $400 for clothing
+  const [materialFilter, setMaterialFilter] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('featured');
   const [filtersVisible, setFiltersVisible] = useState(false);
 
   const { language, t, tProduct } = useLanguage();
   const { toggleWishlist, isInWishlist } = useCart();
 
+  // Disable page scroll when Filter Drawer is open
+  useEffect(() => {
+    if (filtersVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [filtersVisible]);
 
   // Sync category select from home page / header menu
   useEffect(() => {
@@ -49,40 +104,9 @@ export const ProductList: React.FC<ProductListProps> = ({
       setCategoryFilter([]);
       setSizeFilter([]);
       setColorFilter([]);
+      setMaterialFilter([]);
     }
   }, [searchQuery]);
-
-  const allCategories = ['Outerwear', 'Skirts', 'Pants & Leggings', 'Lounge'];
-  
-  const categoryKeyMap: Record<string, string> = {
-    'Outerwear': 'Áo khoác',
-    'Skirts': 'Chân váy',
-    'Pants & Leggings': 'Quần dài',
-    'Lounge': 'Đồ mặc nhà & Đồ len'
-  };
-
-  const colorTranslationMap: Record<string, string> = {
-    'Oatmeal': 'Màu yến mạch',
-    'Black': 'Màu đen',
-    'Light Blue': 'Xanh nhạt',
-    'Grey': 'Màu xám',
-    'Sand': 'Màu cát',
-    'Brown': 'Màu nâu',
-    'Champagne': 'Sâm-panh',
-    'White': 'Màu trắng',
-    'Blue': 'Màu xanh',
-    'Dark Brown': 'Nâu sẫm'
-  };
-
-  const allSizes = ['XS', 'S', 'M', 'L', 'XL'];
-  const allColors = [
-    { name: 'Oatmeal', hex: '#E2D3C1' },
-    { name: 'Black', hex: '#111111' },
-    { name: 'Light Blue', hex: '#8FA9C4' },
-    { name: 'Grey', hex: '#808080' },
-    { name: 'Sand', hex: '#E8C39E' },
-    { name: 'Brown', hex: '#A07855' }
-  ];
 
   const handleCategoryClick = (cat: string) => {
     if (categoryFilter.includes(cat)) {
@@ -109,11 +133,19 @@ export const ProductList: React.FC<ProductListProps> = ({
     }
   };
 
+  const handleMaterialClick = (materialName: string) => {
+    if (materialFilter.includes(materialName)) {
+      setMaterialFilter(materialFilter.filter(m => m !== materialName));
+    } else {
+      setMaterialFilter([...materialFilter, materialName]);
+    }
+  };
+
   const handleResetFilters = () => {
     setCategoryFilter([]);
     setSizeFilter([]);
     setColorFilter([]);
-    setMaxPrice(400);
+    setMaterialFilter([]);
     onClearSearch();
   };
 
@@ -137,8 +169,6 @@ export const ProductList: React.FC<ProductListProps> = ({
       result = result.filter(p => categoryFilter.includes(p.category));
     }
 
-    result = result.filter(p => p.price <= maxPrice);
-
     if (sizeFilter.length > 0) {
       result = result.filter(p => p.sizes.some(s => sizeFilter.includes(s)));
     }
@@ -147,7 +177,11 @@ export const ProductList: React.FC<ProductListProps> = ({
       result = result.filter(p => p.colors.some(c => colorFilter.includes(c.name)));
     }
 
-    // Sort sorting
+    if (materialFilter.length > 0) {
+      result = result.filter(p => p.material && materialFilter.includes(p.material));
+    }
+
+    // Sorting
     if (sortBy === 'price-low') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-high') {
@@ -157,7 +191,7 @@ export const ProductList: React.FC<ProductListProps> = ({
     }
 
     return result;
-  }, [categoryFilter, sizeFilter, colorFilter, maxPrice, sortBy, searchQuery]);
+  }, [categoryFilter, sizeFilter, colorFilter, materialFilter, sortBy, searchQuery]);
 
   return (
     <div className="container" style={{ padding: '40px 48px 80px' }}>
@@ -173,7 +207,7 @@ export const ProductList: React.FC<ProductListProps> = ({
         </h1>
       </div>
 
-      {/* 2. Horizontal Filter Options Bar (Matching Mockup) */}
+      {/* 2. Horizontal Filter Options Bar */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -224,7 +258,7 @@ export const ProductList: React.FC<ProductListProps> = ({
 
           {/* Inline Filter Panel Toggle */}
           <button
-            onClick={() => setFiltersVisible(!filtersVisible)}
+            onClick={() => setFiltersVisible(true)}
             style={{
               background: 'none',
               border: 'none',
@@ -236,90 +270,13 @@ export const ProductList: React.FC<ProductListProps> = ({
               fontWeight: 500
             }}
           >
-            {t('filter_refine')}
+            {language === 'vi' ? 'Bộ lọc' : 'Filters'}
           </button>
         </div>
       </div>
 
-      {/* 3. Grid Layout */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: filtersVisible ? '240px 1fr' : '1fr',
-        gap: '40px',
-        transition: 'all 0.3s ease'
-      }} className="shop-grid-layout">
-        
-        {/* Left Filter Side Bar (Toggled) */}
-        {filtersVisible && (
-          <aside style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px',
-            textAlign: 'left',
-            animation: 'fadeInLeft 0.3s ease'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('filter_refine')}</span>
-              <button 
-                onClick={handleResetFilters}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', textDecoration: 'underline', color: 'var(--color-text-light)' }}
-              >
-                {t('filter_clear_all')}
-              </button>
-            </div>
-
-            {/* Size checklist */}
-            <div>
-              <span className="form-label" style={{ fontSize: '11px', color: 'var(--color-text-light)', marginBottom: '10px' }}>{t('filter_size')}</span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {allSizes.map(size => (
-                  <button
-                    key={size}
-                    onClick={() => handleSizeClick(size)}
-                    className={`size-box ${sizeFilter.includes(size) ? 'active' : ''}`}
-                    style={{ width: '36px', height: '36px', fontSize: '11px' }}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Color circles */}
-            <div>
-              <span className="form-label" style={{ fontSize: '11px', color: 'var(--color-text-light)', marginBottom: '10px' }}>{t('filter_color')}</span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {allColors.map(color => (
-                  <button
-                    key={color.name}
-                    className={`color-circle ${colorFilter.includes(color.name) ? 'active' : ''}`}
-                    style={{ width: '22px', height: '22px' }}
-                    onClick={() => handleColorClick(color.name)}
-                    title={language === 'vi' ? (colorTranslationMap[color.name] || color.name) : color.name}
-                  >
-                    <div className="color-circle-fill" style={{ backgroundColor: color.hex }} />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Price slider */}
-            <div>
-              <span className="form-label" style={{ fontSize: '11px', color: 'var(--color-text-light)', marginBottom: '10px' }}>{t('filter_max_price', { price: maxPrice })}</span>
-              <input 
-                type="range" 
-                min={20} 
-                max={400} 
-                step={10} 
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-                className="range-slider"
-              />
-            </div>
-          </aside>
-        )}
-
-        {/* Right Catalog View */}
+      {/* 3. Catalog Products Grid */}
+      <div className="shop-grid-layout">
         <div>
           {filteredProducts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '80px 0' }}>
@@ -327,8 +284,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               <button onClick={handleResetFilters} className="btn btn-secondary" style={{ width: 'auto' }}>{t('reset_refinement')}</button>
             </div>
           ) : (
-            /* Minimal borderless clothing product cards */
-            <div className="product-grid" style={{ gridTemplateColumns: filtersVisible ? 'repeat(auto-fill, minmax(250px, 1fr))' : 'repeat(auto-fill, minmax(280px, 1fr))' }}>
+            <div className="product-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
               {filteredProducts.map((product) => {
                 const localized = tProduct(product);
                 return (
@@ -356,7 +312,6 @@ export const ProductList: React.FC<ProductListProps> = ({
                       </div>
 
                       {/* Wishlist Heart Icon */}
-
                       <button 
                         className="wishlist-btn" 
                         onClick={(e) => {
@@ -366,7 +321,6 @@ export const ProductList: React.FC<ProductListProps> = ({
                       >
                         <Heart size={17} fill={isInWishlist(product.id) ? "var(--color-text-primary)" : "none"} />
                       </button>
-
 
                       {/* Quick Add Plus Icon */}
                       <button 
@@ -411,12 +365,263 @@ export const ProductList: React.FC<ProductListProps> = ({
           )}
         </div>
       </div>
+
+      {/* 4. Filter Drawer Overlay (Figma Mockup compliant) */}
+      {filtersVisible && (
+        <>
+          {/* Backdrop blur overlay */}
+          <div 
+            className="filter-drawer-backdrop"
+            onClick={() => setFiltersVisible(false)}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.4)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 900,
+              animation: 'fadeIn 0.3s ease'
+            }}
+          />
+
+          {/* Drawer Panel */}
+          <div 
+            className="filter-drawer-panel"
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              maxWidth: '100%',
+              height: '100vh',
+              backgroundColor: 'var(--color-white)',
+              boxShadow: '-4px 0 20px rgba(0,0,0,0.15)',
+              zIndex: 1000,
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'slideInRight 0.3s ease',
+              textAlign: 'left'
+            }}
+          >
+            {/* Drawer Header */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '24px 32px',
+              borderBottom: '1px solid var(--color-border)'
+            }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 500, letterSpacing: '0.05em', margin: 0, color: 'var(--color-text-primary)', fontFamily: 'var(--font-serif)' }}>
+                {language === 'vi' ? 'Bộ lọc' : 'Filters'}
+              </h2>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                {(sizeFilter.length > 0 || colorFilter.length > 0 || materialFilter.length > 0) && (
+                  <button
+                    onClick={handleResetFilters}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      textDecoration: 'underline',
+                      color: 'var(--color-text-secondary)',
+                      padding: 0
+                    }}
+                  >
+                    {language === 'vi' ? 'Xóa tất cả' : 'Clear All'}
+                  </button>
+                )}
+                <button 
+                  onClick={() => setFiltersVisible(false)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4px' }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable Content */}
+            <div style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '32px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '40px'
+            }}>
+              {/* Color Swatches */}
+              <div>
+                <h4 style={{ fontSize: '12px', fontWeight: 600, marginBottom: '16px', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--color-text-light)' }}>
+                  {language === 'vi' ? 'Màu sắc' : 'Color'}
+                </h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                  {allColors.map(color => {
+                    const isActive = colorFilter.includes(color.name);
+                    return (
+                      <button
+                        key={color.name}
+                        onClick={() => handleColorClick(color.name)}
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '50%',
+                          border: isActive ? '1px solid #000000' : '1px solid transparent',
+                          padding: '3px',
+                          backgroundColor: 'transparent',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'border-color 0.2s ease',
+                          outline: 'none'
+                        }}
+                        title={language === 'vi' ? (colorTranslationMap[color.name] || color.name) : color.name}
+                      >
+                        <div style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          backgroundColor: color.hex,
+                          border: color.hex.toLowerCase() === '#ffffff' ? '1px solid #e5e5e5' : 'none'
+                        }} />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Material List */}
+              <div>
+                <h4 style={{ fontSize: '12px', fontWeight: 600, marginBottom: '16px', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--color-text-light)' }}>
+                  {language === 'vi' ? 'Chất liệu' : 'Material'}
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {materialDetails.map(mat => {
+                    const isActive = materialFilter.includes(mat.key);
+                    const count = MOCK_PRODUCTS.filter(p => {
+                      if (categoryFilter.length > 0 && !categoryFilter.includes(p.category)) return false;
+                      if (colorFilter.length > 0 && !p.colors.some(c => colorFilter.includes(c.name))) return false;
+                      if (sizeFilter.length > 0 && !p.sizes.some(s => sizeFilter.includes(s))) return false;
+                      return p.material === mat.key;
+                    }).length;
+
+                    const label = language === 'vi' ? mat.labelVi : mat.labelEn;
+
+                    return (
+                      <div 
+                        key={mat.key}
+                        onClick={() => handleMaterialClick(mat.key)}
+                        style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: isActive ? 600 : 400,
+                          color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                          paddingBottom: '2px',
+                          width: '100%',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <span style={{ textDecoration: isActive ? 'underline' : 'none' }}>{label}</span>
+                        <span style={{ color: 'var(--color-text-light)', fontSize: '13px' }}>({count})</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Size List */}
+              <div>
+                <h4 style={{ fontSize: '12px', fontWeight: 600, marginBottom: '16px', letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--color-text-light)' }}>
+                  {language === 'vi' ? 'Kích cỡ' : 'Size'}
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {sizeDetails.map(size => {
+                    const isActive = sizeFilter.includes(size.key);
+                    const count = MOCK_PRODUCTS.filter(p => {
+                      if (categoryFilter.length > 0 && !categoryFilter.includes(p.category)) return false;
+                      if (colorFilter.length > 0 && !p.colors.some(c => colorFilter.includes(c.name))) return false;
+                      if (materialFilter.length > 0 && p.material && !materialFilter.includes(p.material)) return false;
+                      return p.sizes.includes(size.key);
+                    }).length;
+
+                    const label = language === 'vi' ? size.labelVi : size.labelEn;
+
+                    return (
+                      <div 
+                        key={size.key}
+                        onClick={() => handleSizeClick(size.key)}
+                        style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          cursor: 'pointer',
+                          fontSize: '14px',
+                          fontWeight: isActive ? 600 : 400,
+                          color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                          paddingBottom: '2px',
+                          width: '100%',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <span style={{ textDecoration: isActive ? 'underline' : 'none' }}>{label}</span>
+                        <span style={{ color: 'var(--color-text-light)', fontSize: '13px' }}>({count})</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom CTA Button */}
+            <div style={{
+              padding: '24px 32px',
+              borderTop: '1px solid var(--color-border)',
+              backgroundColor: 'var(--color-white)'
+            }}>
+              <button
+                onClick={() => setFiltersVisible(false)}
+                className="btn btn-primary"
+                style={{
+                  width: '100%',
+                  height: '52px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  fontWeight: 600,
+                  fontSize: '13px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                {language === 'vi' 
+                  ? `Xem kết quả (${filteredProducts.length})` 
+                  : `See Results (${filteredProducts.length})`}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       
-      {/* Sidebar toggle animation */}
+      {/* Drawer Animations & Styles */}
       <style>{`
-        @keyframes fadeInLeft {
-          from { opacity: 0; transform: translateX(-20px); }
-          to { opacity: 1; transform: translateX(0); }
+        .filter-drawer-panel {
+          width: 400px;
+        }
+        @media (max-width: 480px) {
+          .filter-drawer-panel {
+            width: 100% !important;
+          }
+        }
+        @keyframes slideInRight {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         @media (max-width: 768px) {
           .filter-option-bar {
@@ -424,11 +629,9 @@ export const ProductList: React.FC<ProductListProps> = ({
             align-items: flex-start !important;
             gap: 16px !important;
           }
-          .shop-grid-layout {
-            grid-template-columns: 1fr !important;
-          }
         }
       `}</style>
     </div>
   );
 };
+

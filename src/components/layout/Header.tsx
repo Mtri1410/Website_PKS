@@ -1,12 +1,38 @@
 import React, { useState } from 'react';
 import { Search, MapPin, User, Heart, ShoppingBag, X } from 'lucide-react';
 
-import dropdownModel from '../../assets/dropdown_model.png';
+import dropdownModel from '../../assets/dropdown_model.webp';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
 import { MOCK_PRODUCTS } from '../../data/mockData';
 import type { Product } from '../../types';
 
+
+const megaMenuData = {
+  categories: ['Bags', 'Clothing', 'Leather Goods', 'Accessories', 'Gifts', 'Shop All'],
+  featured: ['New Arrivals', 'Bestsellers', 'Trending Now', 'Loungewear'],
+  collections: ['Party and events', 'Office looks', 'Selection', 'Online Exclusive', 'Knitwear', 'Total Look', 'Basics']
+};
+
+const menuKeyMap: Record<string, string> = {
+  'Bags': 'menu_bags',
+  'Clothing': 'menu_clothing',
+  'Leather Goods': 'menu_leather',
+  'Accessories': 'menu_accessories',
+  'Gifts': 'menu_gifts',
+  'Shop All': 'menu_shop_all',
+  'New Arrivals': 'nav_new_arrivals',
+  'Bestsellers': 'menu_bestsellers',
+  'Trending Now': 'menu_trending',
+  'Loungewear': 'menu_loungewear',
+  'Party and events': 'menu_party',
+  'Office looks': 'menu_office',
+  'Selection': 'menu_selection',
+  'Online Exclusive': 'menu_online_exclusive',
+  'Knitwear': 'menu_knitwear',
+  'Total Look': 'menu_total_look',
+  'Basics': 'menu_basics'
+};
 
 interface HeaderProps {
   cartCount: number;
@@ -47,32 +73,6 @@ export const Header: React.FC<HeaderProps> = ({
       onPageChange('search-results');
       setSearchOpen(false);
     }
-  };
-
-  const megaMenuData = {
-    categories: ['Bags', 'Clothing', 'Leather Goods', 'Accessories', 'Gifts', 'Shop All'],
-    featured: ['New Arrivals', 'Bestsellers', 'Trending Now', 'Loungewear'],
-    collections: ['Party and events', 'Office looks', 'Selection', 'Online Exclusive', 'Knitwear', 'Total Look', 'Basics']
-  };
-
-  const menuKeyMap: Record<string, string> = {
-    'Bags': 'menu_bags',
-    'Clothing': 'menu_clothing',
-    'Leather Goods': 'menu_leather',
-    'Accessories': 'menu_accessories',
-    'Gifts': 'menu_gifts',
-    'Shop All': 'menu_shop_all',
-    'New Arrivals': 'nav_new_arrivals',
-    'Bestsellers': 'menu_bestsellers',
-    'Trending Now': 'menu_trending',
-    'Loungewear': 'menu_loungewear',
-    'Party and events': 'menu_party',
-    'Office looks': 'menu_office',
-    'Selection': 'menu_selection',
-    'Online Exclusive': 'menu_online_exclusive',
-    'Knitwear': 'menu_knitwear',
-    'Total Look': 'menu_total_look',
-    'Basics': 'menu_basics'
   };
 
   const handleLinkClick = (page: string, category?: string) => {

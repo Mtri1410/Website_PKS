@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { ShoppingBagDrawer } from './components/layout/ShoppingBagDrawer';
@@ -6,14 +6,15 @@ import { QuickViewModal } from './components/product/QuickViewModal';
 import { NewsletterPopup } from './components/layout/NewsletterPopup';
 import { CartProvider, useCart } from './context/CartContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
-import { Home } from './pages/Home';
-import { ProductList } from './pages/ProductList';
-import { ProductDetail } from './pages/ProductDetail';
-import { Cart } from './pages/Cart';
-import { SearchResults } from './pages/SearchResults';
-import { Wishlist } from './pages/Wishlist';
-import type { Product } from './types';
 
+const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
+const ProductList = lazy(() => import('./pages/ProductList').then(m => ({ default: m.ProductList })));
+const ProductDetail = lazy(() => import('./pages/ProductDetail').then(m => ({ default: m.ProductDetail })));
+const Cart = lazy(() => import('./pages/Cart').then(m => ({ default: m.Cart })));
+const SearchResults = lazy(() => import('./pages/SearchResults').then(m => ({ default: m.SearchResults })));
+const Wishlist = lazy(() => import('./pages/Wishlist').then(m => ({ default: m.Wishlist })));
+
+import type { Product } from './types';
 import { MOCK_PRODUCTS } from './data/mockData';
 import './App.css';
 
@@ -118,68 +119,83 @@ function AppContent() {
 
       {/* Main Dynamic View Content */}
       <main style={{ flexGrow: 1 }}>
-        {currentPage === 'home' && (
-          <Home 
-            onPageChange={handlePageChange} 
-            onQuickView={handleQuickViewOpen}
-            onAddToBag={addToCart}
-            onCategorySelect={handleCategorySelect}
-            onSelectProduct={handleProductSelect}
-          />
-        )}
-        
-        {currentPage === 'shop' && (
-          <ProductList 
-            onQuickView={handleQuickViewOpen}
-            onAddToBag={addToCart}
-            selectedCategory={selectedCategory}
-            searchQuery={searchQuery}
-            onClearSearch={handleClearSearch}
-            onSelectProduct={handleProductSelect}
-          />
-        )}
+        <Suspense fallback={
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            minHeight: '50vh', 
+            fontSize: '14px', 
+            color: 'var(--color-text-light)',
+            letterSpacing: '0.05em'
+          }}>
+            {language === 'vi' ? 'Đang tải trang...' : 'Loading page...'}
+          </div>
+        }>
+          {currentPage === 'home' && (
+            <Home 
+              onPageChange={handlePageChange} 
+              onQuickView={handleQuickViewOpen}
+              onAddToBag={addToCart}
+              onCategorySelect={handleCategorySelect}
+              onSelectProduct={handleProductSelect}
+            />
+          )}
+          
+          {currentPage === 'shop' && (
+            <ProductList 
+              onQuickView={handleQuickViewOpen}
+              onAddToBag={addToCart}
+              selectedCategory={selectedCategory}
+              searchQuery={searchQuery}
+              onClearSearch={handleClearSearch}
+              onSelectProduct={handleProductSelect}
+            />
+          )}
 
-        {currentPage === 'product-detail' && activeProductDetail && (
-          <ProductDetail
-            product={activeProductDetail}
-            onBack={() => handlePageChange('shop')}
-            onAddToBag={addToCart}
-            onSelectProduct={handleProductSelect}
-          />
-        )}
+          {currentPage === 'product-detail' && activeProductDetail && (
+            <ProductDetail
+              product={activeProductDetail}
+              onBack={() => handlePageChange('shop')}
+              onAddToBag={addToCart}
+              onSelectProduct={handleProductSelect}
+            />
+          )}
 
-        {currentPage === 'cart' && (
-          <Cart 
-            cartItems={cartItems}
-            onUpdateQuantity={updateQuantity}
-            onRemoveItem={removeItem}
-            onClearCart={clearCart}
-            onPageChange={handlePageChange}
-            appliedDiscount={discount}
-            onApplyDiscount={setDiscount}
-          />
-        )}
+          {currentPage === 'cart' && (
+            <Cart 
+              cartItems={cartItems}
+              onUpdateQuantity={updateQuantity}
+              onRemoveItem={removeItem}
+              onClearCart={clearCart}
+              onPageChange={handlePageChange}
+              appliedDiscount={discount}
+              onApplyDiscount={setDiscount}
+            />
+          )}
 
-        {currentPage === 'search-results' && (
-          <SearchResults 
-            products={searchedProducts}
-            query={searchQuery}
-            onQuickView={handleQuickViewOpen}
-            onAddToBag={addToCart}
-            onPageChange={handlePageChange}
-            onSelectProduct={handleProductSelect}
-          />
-        )}
+          {currentPage === 'search-results' && (
+            <SearchResults 
+              products={searchedProducts}
+              query={searchQuery}
+              onQuickView={handleQuickViewOpen}
+              onAddToBag={addToCart}
+              onPageChange={handlePageChange}
+              onSelectProduct={handleProductSelect}
+            />
+          )}
 
-        {currentPage === 'wishlist' && (
-          <Wishlist
-            onQuickView={handleQuickViewOpen}
-            onAddToBag={addToCart}
-            onPageChange={handlePageChange}
-            onSelectProduct={handleProductSelect}
-          />
-        )}
+          {currentPage === 'wishlist' && (
+            <Wishlist
+              onQuickView={handleQuickViewOpen}
+              onAddToBag={addToCart}
+              onPageChange={handlePageChange}
+              onSelectProduct={handleProductSelect}
+            />
+          )}
+        </Suspense>
       </main>
+
 
 
       {/* Global Footer */}

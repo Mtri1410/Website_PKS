@@ -2,12 +2,12 @@ import React from 'react';
 import { ShoppingBag, Heart } from 'lucide-react';
 import type { Product } from '../types';
 import { MOCK_PRODUCTS } from '../data/mockData';
-import dropdownModel from '../assets/dropdown_model.png';
-import heroModel from '../assets/hero_model.png';
-import igModel from '../assets/ig_model.png';
-import promoModel from '../assets/promo_model.png';
-import classicPantImg from '../assets/product_classic_pant.png';
-import crewneckModelImg from '../assets/product_crewneck_model.png';
+import dropdownModel from '../assets/dropdown_model.webp';
+import heroModel from '../assets/hero_model.webp';
+import igModel from '../assets/ig_model.webp';
+import promoModel from '../assets/promo_model.webp';
+import classicPantImg from '../assets/product_classic_pant.webp';
+import crewneckModelImg from '../assets/product_crewneck_model.webp';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 
@@ -384,6 +384,7 @@ export const Home: React.FC<HomeProps> = ({
               alt={t('editorial_smart_chic')}
               style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform var(--transition-slow)' }}
               className="editorial-split-image"
+              loading="lazy"
             />
             <div style={{
               position: 'absolute',
@@ -417,6 +418,7 @@ export const Home: React.FC<HomeProps> = ({
               alt={t('editorial_ready_to_go')}
               style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform var(--transition-slow)' }}
               className="editorial-split-image"
+              loading="lazy"
             />
             <div style={{
               position: 'absolute',
@@ -480,6 +482,7 @@ export const Home: React.FC<HomeProps> = ({
                 alt="Instagram feed item"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform var(--transition-slow)' }}
                 className="ig-image-home"
+                loading="lazy"
               />
 
               {/* Visual default overlay icon for 4th item */}

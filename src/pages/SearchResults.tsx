@@ -14,6 +14,19 @@ interface SearchResultsProps {
   onSelectProduct: (product: Product) => void;
 }
 
+const colorTranslationMap: Record<string, string> = {
+  'Oatmeal': 'Màu yến mạch',
+  'Black': 'Màu đen',
+  'Light Blue': 'Xanh nhạt',
+  'Grey': 'Màu xám',
+  'Sand': 'Màu cát',
+  'Brown': 'Màu nâu',
+  'Champagne': 'Sâm-panh',
+  'White': 'Màu trắng',
+  'Blue': 'Màu xanh',
+  'Dark Brown': 'Nâu sẫm'
+};
+
 export const SearchResults: React.FC<SearchResultsProps> = ({
   products,
   query,
@@ -25,20 +38,6 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
 
   const { language, t, tProduct } = useLanguage();
   const { toggleWishlist, isInWishlist } = useCart();
-
-
-  const colorTranslationMap: Record<string, string> = {
-    'Oatmeal': 'Màu yến mạch',
-    'Black': 'Màu đen',
-    'Light Blue': 'Xanh nhạt',
-    'Grey': 'Màu xám',
-    'Sand': 'Màu cát',
-    'Brown': 'Màu nâu',
-    'Champagne': 'Sâm-panh',
-    'White': 'Màu trắng',
-    'Blue': 'Màu xanh',
-    'Dark Brown': 'Nâu sẫm'
-  };
 
   return (
     <div className="container" style={{ padding: '60px 48px 100px' }}>
