@@ -1,0 +1,419 @@
+/* CEIN. E-Commerce - Minimalist Design System & Styling */
+
+:root {
+  /* Color Palette */
+  --color-bg: #ffffff;
+  --color-card-bg: #F8F8F8;     /* Mockups product background */
+  --color-text-primary: #000000;
+  --color-text-secondary: #222222;
+  --color-text-light: #777777;
+  --color-border: #E5E5E5;      /* Thin light dividers */
+  --color-accent-gold: #C5A880;
+  --color-danger: #b33939;
+  --color-success: #218c74;
+  --color-white: #ffffff;
+  
+  /* Layout Shadows & Spacing */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-normal: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-slow: 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-light);
+}
+
+/* Container */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: 1px solid transparent;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: var(--color-text-primary);
+  color: var(--color-white);
+  border-color: var(--color-text-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-text-secondary);
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-text-primary);
+  color: var(--color-white);
+}
+
+/* Borderless Product Cards */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 48px 32px;
+}
+
+.product-card {
+  background-color: transparent;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.product-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.15;
+  background-color: var(--color-card-bg);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.03);
+}
+
+/* Wishlist Heart */
+.wishlist-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Bottom Right Add to Bag Plus */
+.quick-add-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.quick-add-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Card details styling */
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text-primary);
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Modals & Overlays */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Sliding Cart Drawer */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 480px;
+  max-width: 100vw;
+  background-color: var(--color-white);
+  z-index: 101;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.05);
+  transform: translateX(100%);
+  transition: transform var(--transition-normal);
+}
+
+.drawer.active {
+  transform: translateX(0);
+}
+
+/* Popups & Modals */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%) scale(0.98);
+  background-color: var(--color-white);
+  z-index: 102;
+  width: 960px;
+  max-width: 90vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal.active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mega Menu Dropdown Container */
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  z-index: 48;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.mega-menu-trigger:hover .mega-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Global Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition-fast);
+  background-color: #fafafa;
+}
+
+.form-input:focus {
+  border-color: var(--color-text-primary);
+  background-color: var(--color-white);
+}
+
+/* Category Filter Pills (Product List Page) */
+.category-pill {
+  padding: 8px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  font-size: 13px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.category-pill:hover {
+  border-color: var(--color-text-primary);
+}
+
+.category-pill.active {
+  background-color: var(--color-text-primary);
+  color: var(--color-white);
+  border-color: var(--color-text-primary);
+}
+
+/* Size Selection Box (Product Detail Page) */
+.size-box {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background-color: transparent;
+}
+
+.size-box:hover {
+  border-color: var(--color-text-primary);
+}
+
+.size-box.active {
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 1px var(--color-text-primary);
+}
+
+/* Color dot outlines */
+.color-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  padding: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition: var(--transition-fast);
+}
+
+.color-circle-fill {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.color-circle.active {
+  border-color: var(--color-text-primary);
+  box-shadow: 0 0 0 1px var(--color-text-primary);
+}
+
+/* Toast Alerts */
+.toast-notification {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background-color: var(--color-text-primary);
+  color: var(--color-white);
+  padding: 16px 24px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  z-index: 1000;
+  transform: translateY(150%);
+  transition: transform var(--transition-normal);
+}
+
+.toast-notification.active {
+  transform: translateY(0);
+}
