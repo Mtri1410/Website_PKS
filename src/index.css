@@ -410,10 +410,16 @@ a {
   font-size: 13px;
   letter-spacing: 0.03em;
   z-index: 1000;
-  transform: translateY(150%);
-  transition: transform var(--transition-normal);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(30px);
+  transition: transform var(--transition-normal), opacity var(--transition-normal), visibility var(--transition-normal);
 }
 
 .toast-notification.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
   transform: translateY(0);
 }
