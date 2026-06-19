@@ -163,7 +163,14 @@ const translations = {
     'search_results_desc': 'Tìm thấy <strong>{count}</strong> sản phẩm phù hợp với từ khóa "<strong>{query}</strong>"',
     'search_empty_desc': 'Chúng tôi không tìm thấy trang phục nào phù hợp với từ khóa của bạn. Hãy thử tìm các sản phẩm cơ bản như "blazer", "cardigan", "silk" hoặc "pant".',
     
+    // Wishlist
+    'wishlist_title': 'Sản Phẩm Yêu Thích',
+    'wishlist_desc': 'Bạn đang lưu trữ <strong>{count}</strong> sản phẩm trong danh sách yêu thích của mình',
+    'wishlist_empty': 'Danh sách yêu thích của bạn đang trống.',
+    'wishlist_empty_desc': 'Hãy khám phá cửa hàng của chúng tôi để tìm những sản phẩm phù hợp nhất với tủ đồ của bạn.',
+
     // Quick View
+
     'view_full_details': 'Xem chi tiết sản phẩm',
 
     // Newsletter Popup
@@ -320,7 +327,14 @@ const translations = {
     'search_results_desc': 'Found <strong>{count}</strong> items matching your search for "<strong>{query}</strong>"',
     'search_empty_desc': "We couldn't find any clothing pieces matching your search term. Try searching for essentials like 'blazer', 'cardigan', 'silk', or 'pant'.",
     
+    // Wishlist
+    'wishlist_title': 'My Wishlist',
+    'wishlist_desc': 'You have <strong>{count}</strong> items saved in your wishlist',
+    'wishlist_empty': 'Your wishlist is empty.',
+    'wishlist_empty_desc': 'Browse our collection to find pieces that inspire you.',
+
     // Quick View
+
     'view_full_details': 'View full details',
 
     // Newsletter Popup

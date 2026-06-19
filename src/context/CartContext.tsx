@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { CartItem, Product, ColorOption } from '../types';
+import { useLanguage } from './LanguageContext';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -9,39 +10,72 @@ interface CartContextType {
   clearCart: () => void;
   cartCount: number;
   subtotal: number;
-  showToast: (message: string) => void;
+  showToast: (message: string, duration?: number, undoAction?: (() => void) | null) => void;
   toastMessage: string;
   toastActive: boolean;
+  toastUndoAction: (() => void) | null;
+  triggerUndo: () => void;
+  // Wishlist
+  wishlistItems: Product[];
+  toggleWishlist: (product: Product) => void;
+  isInWishlist: (productId: string) => boolean;
+  wishlistCount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { language } = useLanguage();
+
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('genx_beauty_cart');
+    const saved = localStorage.getItem('genxpks_cart');
+    // Maintain fallback compatibility
+    const fallback = localStorage.getItem('genx_beauty_cart');
+    return saved ? JSON.parse(saved) : (fallback ? JSON.parse(fallback) : []);
+  });
+
+  const [wishlistItems, setWishlistItems] = useState<Product[]>(() => {
+    const saved = localStorage.getItem('genxpks_wishlist');
     return saved ? JSON.parse(saved) : [];
   });
 
   const [toastMessage, setToastMessage] = useState('');
   const [toastActive, setToastActive] = useState(false);
+  const [toastUndoAction, setToastUndoAction] = useState<(() => void) | null>(null);
+  const [toastDuration, setToastDuration] = useState(3000);
 
   useEffect(() => {
-    localStorage.setItem('genx_beauty_cart', JSON.stringify(cartItems));
+    localStorage.setItem('genxpks_cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const showToast = (message: string) => {
+  useEffect(() => {
+    localStorage.setItem('genxpks_wishlist', JSON.stringify(wishlistItems));
+  }, [wishlistItems]);
+
+  const showToast = (message: string, duration: number = 3000, undoAction: (() => void) | null = null) => {
     setToastMessage(message);
+    setToastUndoAction(() => undoAction);
+    setToastDuration(duration);
     setToastActive(true);
+  };
+
+  const triggerUndo = () => {
+    if (toastUndoAction) {
+      toastUndoAction();
+      setToastActive(false);
+      setToastUndoAction(null);
+    }
   };
 
   useEffect(() => {
     if (toastActive) {
       const timer = setTimeout(() => {
         setToastActive(false);
-      }, 3000);
+        setToastUndoAction(null);
+      }, toastDuration);
       return () => clearTimeout(timer);
     }
-  }, [toastActive]);
+  }, [toastActive, toastDuration]);
 
   const addToCart = (product: Product, size: string, color: ColorOption, quantity: number) => {
     setCartItems((prevItems) => {
@@ -52,14 +86,24 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           item.selectedColor.name === color.name
       );
 
+      const prodName = language === 'vi' ? (product.nameVi || product.name) : product.name;
+
       if (existingIndex > -1) {
         const newItems = [...prevItems];
         newItems[existingIndex].quantity += quantity;
-        showToast(`Updated quantity of ${product.name} in bag.`);
+        showToast(
+          language === 'vi'
+            ? `Đã cập nhật số lượng ${prodName} trong giỏ hàng.`
+            : `Updated quantity of ${product.name} in bag.`
+        );
         return newItems;
       }
 
-      showToast(`Added ${product.name} to shopping bag.`);
+      showToast(
+        language === 'vi'
+          ? `Đã thêm ${prodName} vào giỏ hàng.`
+          : `Added ${product.name} to shopping bag.`
+      );
       return [...prevItems, { product, selectedSize: size, selectedColor: color, quantity }];
     });
   };
@@ -89,7 +133,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           item.selectedColor.name === colorName
       );
       if (itemToRemove) {
-        showToast(`Removed ${itemToRemove.product.name} from bag.`);
+        const prodName = language === 'vi' ? (itemToRemove.product.nameVi || itemToRemove.product.name) : itemToRemove.product.name;
+        showToast(
+          language === 'vi'
+            ? `Đã xóa ${prodName} khỏi giỏ hàng.`
+            : `Removed ${itemToRemove.product.name} from bag.`
+        );
       }
       return prevItems.filter(
         (item) =>
@@ -106,6 +155,50 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCartItems([]);
   };
 
+  const toggleWishlist = (product: Product) => {
+    const prodName = language === 'vi' ? (product.nameVi || product.name) : product.name;
+    setWishlistItems((prev) => {
+      const exists = prev.some((item) => item.id === product.id);
+      if (exists) {
+        showToast(
+          language === 'vi'
+            ? `Đã xóa ${prodName} khỏi danh sách yêu thích.`
+            : `Removed ${product.name} from wishlist.`,
+          5000,
+          () => {
+            setWishlistItems((current) => {
+              if (current.some((item) => item.id === product.id)) return current;
+              setTimeout(() => {
+                showToast(
+                  language === 'vi'
+                    ? `Đã khôi phục ${prodName} vào danh sách yêu thích.`
+                    : `Restored ${product.name} to wishlist.`,
+                  3000
+                );
+              }, 100);
+              return [...current, product];
+            });
+          }
+        );
+        return prev.filter((item) => item.id !== product.id);
+      } else {
+        showToast(
+          language === 'vi'
+            ? `Đã thêm ${prodName} vào danh sách yêu thích.`
+            : `Added ${product.name} to wishlist.`,
+          3000
+        );
+        return [...prev, product];
+      }
+    });
+  };
+
+
+  const isInWishlist = (productId: string) => {
+    return wishlistItems.some((item) => item.id === productId);
+  };
+
+  const wishlistCount = wishlistItems.length;
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
@@ -121,7 +214,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         subtotal,
         showToast,
         toastMessage,
-        toastActive
+        toastActive,
+        toastUndoAction,
+        triggerUndo,
+        // Wishlist variables
+        wishlistItems,
+        toggleWishlist,
+        isInWishlist,
+        wishlistCount
+
       }}
     >
       {children}

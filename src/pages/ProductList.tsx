@@ -3,6 +3,8 @@ import { ChevronDown, Heart, ShoppingBag } from 'lucide-react';
 import type { Product, ColorOption } from '../types';
 import { MOCK_PRODUCTS } from '../data/mockData';
 import { useLanguage } from '../context/LanguageContext';
+import { useCart } from '../context/CartContext';
+
 
 interface ProductListProps {
   onQuickView?: (product: Product) => void;
@@ -14,12 +16,14 @@ interface ProductListProps {
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
+  onQuickView,
   onAddToBag,
   selectedCategory,
   searchQuery,
   onClearSearch,
   onSelectProduct
 }) => {
+
   const [categoryFilter, setCategoryFilter] = useState<string[]>([]);
   const [sizeFilter, setSizeFilter] = useState<string[]>([]);
   const [colorFilter, setColorFilter] = useState<string[]>([]);
@@ -28,6 +32,8 @@ export const ProductList: React.FC<ProductListProps> = ({
   const [filtersVisible, setFiltersVisible] = useState(false);
 
   const { language, t, tProduct } = useLanguage();
+  const { toggleWishlist, isInWishlist } = useCart();
+
 
   // Sync category select from home page / header menu
   useEffect(() => {
@@ -338,16 +344,29 @@ export const ProductList: React.FC<ProductListProps> = ({
                         className="product-image"
                       />
 
+                      {/* Quick View Hover overlay */}
+                      <div 
+                        className="quick-view-overlay"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onQuickView) onQuickView(product);
+                        }}
+                      >
+                        <span>{language === 'vi' ? 'Xem nhanh' : 'Quick View'}</span>
+                      </div>
+
                       {/* Wishlist Heart Icon */}
+
                       <button 
                         className="wishlist-btn" 
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert(t('added_to_wishlist', { name: localized.name }));
+                          toggleWishlist(product);
                         }}
                       >
-                        <Heart size={17} />
+                        <Heart size={17} fill={isInWishlist(product.id) ? "var(--color-text-primary)" : "none"} />
                       </button>
+
 
                       {/* Quick Add Plus Icon */}
                       <button 

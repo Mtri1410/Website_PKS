@@ -11,7 +11,9 @@ import { ProductList } from './pages/ProductList';
 import { ProductDetail } from './pages/ProductDetail';
 import { Cart } from './pages/Cart';
 import { SearchResults } from './pages/SearchResults';
+import { Wishlist } from './pages/Wishlist';
 import type { Product } from './types';
+
 import { MOCK_PRODUCTS } from './data/mockData';
 import './App.css';
 
@@ -44,8 +46,11 @@ function AppContent() {
     clearCart,
     cartCount,
     toastMessage,
-    toastActive
+    toastActive,
+    toastUndoAction,
+    triggerUndo
   } = useCart();
+
 
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
@@ -164,7 +169,17 @@ function AppContent() {
             onSelectProduct={handleProductSelect}
           />
         )}
+
+        {currentPage === 'wishlist' && (
+          <Wishlist
+            onQuickView={handleQuickViewOpen}
+            onAddToBag={addToCart}
+            onPageChange={handlePageChange}
+            onSelectProduct={handleProductSelect}
+          />
+        )}
       </main>
+
 
       {/* Global Footer */}
       <Footer />
@@ -202,9 +217,35 @@ function AppContent() {
       <NewsletterPopup onUnlockDiscount={(discountPercentage) => setDiscount(discountPercentage)} />
 
       {/* Global Toast Alert Notification */}
-      <div className={`toast-notification ${toastActive ? 'active' : ''}`}>
+      <div className={`toast-notification ${toastActive ? 'active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'space-between' }}>
         <span>{toastMessage}</span>
+        {toastUndoAction && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              triggerUndo();
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--color-accent-gold)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '12px',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              padding: '4px 8px',
+              marginLeft: '8px',
+              transition: 'opacity 0.2s ease'
+            }}
+            className="toast-undo-btn"
+          >
+            {language === 'vi' ? 'Hoàn tác' : 'Undo'}
+          </button>
+        )}
       </div>
+
     </div>
   );
 }

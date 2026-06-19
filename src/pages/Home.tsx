@@ -9,6 +9,8 @@ import promoModel from '../assets/promo_model.png';
 import classicPantImg from '../assets/product_classic_pant.png';
 import crewneckModelImg from '../assets/product_crewneck_model.png';
 import { useLanguage } from '../context/LanguageContext';
+import { useCart } from '../context/CartContext';
+
 
 interface HomeProps {
   onPageChange: (page: string) => void;
@@ -20,11 +22,15 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({
   onPageChange,
+  onQuickView,
   onAddToBag,
   onCategorySelect,
   onSelectProduct
 }) => {
-  const { t, tProduct } = useLanguage();
+  const { language, t, tProduct } = useLanguage();
+
+  const { toggleWishlist, isInWishlist } = useCart();
+
 
   // Display first 5 products for "What to Wear Now"
   const whatToWearProducts = MOCK_PRODUCTS.slice(0, 5);
@@ -307,17 +313,30 @@ export const Home: React.FC<HomeProps> = ({
                     className="product-image"
                   />
 
+                  {/* Quick View Hover overlay */}
+                  <div 
+                    className="quick-view-overlay"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onQuickView) onQuickView(product);
+                    }}
+                  >
+                    <span>{language === 'vi' ? 'Xem nhanh' : 'Quick View'}</span>
+                  </div>
+
                   {/* Wishlist Heart Icon */}
+
                   <button
                     className="wishlist-btn"
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert(t('added_to_wishlist', { name: localized.name }));
+                      toggleWishlist(product);
                     }}
                     title="Add to Wishlist"
                   >
-                    <Heart size={18} />
+                    <Heart size={18} fill={isInWishlist(product.id) ? "var(--color-text-primary)" : "none"} />
                   </button>
+
 
                   {/* Bottom Plus Add to Bag Icon */}
                   <button

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, MapPin, User, Heart, ShoppingBag } from 'lucide-react';
 import dropdownModel from '../../assets/dropdown_model.png';
 import { useLanguage } from '../../context/LanguageContext';
+import { useCart } from '../../context/CartContext';
 
 interface HeaderProps {
   cartCount: number;
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { language, setLanguage, t } = useLanguage();
+  const { wishlistCount } = useCart();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -405,9 +407,9 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Wishlist Icon */}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleLinkClick('shop', 'Best Seller')}>
-              <Heart size={19} />
-              <span style={{ fontSize: '13px', fontWeight: 500, marginLeft: '4px' }}>0</span>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => onPageChange('wishlist')}>
+              <Heart size={19} fill={wishlistCount > 0 ? "var(--color-text-primary)" : "none"} />
+              <span style={{ fontSize: '13px', fontWeight: 500, marginLeft: '4px' }}>{wishlistCount}</span>
             </div>
 
             {/* Shopping Bag Icon */}
