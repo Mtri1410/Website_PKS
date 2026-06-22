@@ -75,7 +75,7 @@ export const ProductList: React.FC<ProductListProps> = ({
   const [sortBy, setSortBy] = useState('featured');
   const [filtersVisible, setFiltersVisible] = useState(false);
 
-  const { language, t, tProduct } = useLanguage();
+  const { language, t, tProduct, formatPrice } = useLanguage();
   const { toggleWishlist, isInWishlist } = useCart();
 
   // Disable page scroll when Filter Drawer is open
@@ -337,7 +337,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                     {/* Details */}
                     <div className="product-info" style={{ textAlign: 'left' }}>
                       <span className="product-name">{localized.name}</span>
-                      <span className="product-price">${product.price}</span>
+                      <span className="product-price">{formatPrice(product.price)}</span>
                       
                       {/* Render color choices dots if they have multiple colors */}
                       {product.colors.length > 1 && (

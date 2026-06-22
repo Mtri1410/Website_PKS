@@ -41,7 +41,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     shipping: false
   });
 
-  const { language, t, tProduct } = useLanguage();
+  const { language, t, tProduct, formatPrice } = useLanguage();
 
   const styleWithProducts = MOCK_PRODUCTS.filter(p => p.id !== product.id).slice(0, 3);
   const recentlyViewed = MOCK_PRODUCTS.filter(p => p.id !== product.id).slice(3, 6);
@@ -63,10 +63,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     if (selectedColor) {
       onAddToBag(product, selectedSize, selectedColor, 1);
     }
-  };
-
-  const formatPrice = (price: number) => {
-    return `$${price}`;
   };
 
   const localized = tProduct(product);
@@ -245,8 +241,8 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 {accordionsOpen.shipping && (
                   <div style={{ paddingBottom: '16px', fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
                     {language === 'vi'
-                      ? 'Miễn phí giao hàng tiêu chuẩn cho đơn hàng từ $95 trở lên. Chấp nhận đổi trả cho sản phẩm chưa qua sử dụng trong vòng 14 ngày kể từ ngày mua.'
-                      : 'Complimentary shipping on orders over $95. Returns accepted on any unused garments within 14 days of purchase.'}
+                      ? `Miễn phí giao hàng tiêu chuẩn cho đơn hàng từ ${formatPrice(95)} trở lên. Chấp nhận đổi trả cho sản phẩm chưa qua sử dụng trong vòng 14 ngày kể từ ngày mua.`
+                      : `Complimentary shipping on orders over ${formatPrice(95)}. Returns accepted on any unused garments within 14 days of purchase.`}
                   </div>
                 )}
               </div>
@@ -385,7 +381,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="product-info" style={{ textAlign: 'left' }}>
                   <span className="product-name">{pLocalized.name}</span>
-                  <span className="product-price">${p.price}</span>
+                  <span className="product-price">{formatPrice(p.price)}</span>
                 </div>
               </div>
             );
@@ -409,7 +405,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="product-info" style={{ textAlign: 'left' }}>
                   <span className="product-name">{pLocalized.name}</span>
-                  <span className="product-price">${p.price}</span>
+                  <span className="product-price">{formatPrice(p.price)}</span>
                 </div>
               </div>
             );

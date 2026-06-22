@@ -28,7 +28,7 @@ export const Cart: React.FC<CartProps> = ({
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
 
-  const { language, t, tProduct } = useLanguage();
+  const { language, t, tProduct, formatPrice } = useLanguage();
 
   // Gift message states
   const [addGiftMessage, setAddGiftMessage] = useState(false);
@@ -42,10 +42,6 @@ export const Cart: React.FC<CartProps> = ({
   const shippingFee = rawSubtotal >= 200 || rawSubtotal === 0 ? 0 : 15;
   const discountAmount = (rawSubtotal * appliedDiscount) / 100;
   const grandTotal = rawSubtotal - discountAmount + shippingFee;
-
-  const formatPrice = (price: number) => {
-    return `$${price.toLocaleString()}`;
-  };
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -460,7 +456,7 @@ export const Cart: React.FC<CartProps> = ({
 
               {shippingFee > 0 && (
                 <p style={{ fontSize: '11px', color: 'var(--color-text-light)', marginTop: '-8px' }}>
-                  {t('order_shipping_note', { amount: (200 - rawSubtotal) })}
+                  {t('order_shipping_note', { amount: formatPrice(200 - rawSubtotal) })}
                 </p>
               )}
 

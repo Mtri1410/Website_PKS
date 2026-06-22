@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, User, Heart, ShoppingBag, X } from 'lucide-react';
 
 import dropdownModel from '../../assets/dropdown_model.webp';
@@ -53,8 +53,27 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { language, setLanguage, t, tProduct } = useLanguage();
+  const { language, setLanguage, t, tProduct, formatPrice } = useLanguage();
   const { wishlistCount } = useCart();
+
+  const [pulseCart, setPulseCart] = useState(false);
+  const [pulseWishlist, setPulseWishlist] = useState(false);
+
+  useEffect(() => {
+    if (cartCount > 0) {
+      setPulseCart(true);
+      const timer = setTimeout(() => setPulseCart(false), 450);
+      return () => clearTimeout(timer);
+    }
+  }, [cartCount]);
+
+  useEffect(() => {
+    if (wishlistCount > 0) {
+      setPulseWishlist(true);
+      const timer = setTimeout(() => setPulseWishlist(false), 450);
+      return () => clearTimeout(timer);
+    }
+  }, [wishlistCount]);
 
   const suggestedProducts = searchQuery.trim()
     ? MOCK_PRODUCTS.filter((p) => {
@@ -98,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({
         textTransform: 'uppercase',
         borderBottom: '1px solid #111111'
       }}>
-        {t('announcement_bar')} <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleLinkClick('shop')}>{t('shop_now_link')}</span>
+        {t('announcement_bar', { threshold: formatPrice(95) })} <span style={{ textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleLinkClick('shop')}>{t('shop_now_link')}</span>
       </div>
 
       {/* 2. Main Navigation Header */}
@@ -395,17 +414,22 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             {/* Wishlist Icon */}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => onPageChange('wishlist')}>
-              <Heart size={19} fill={wishlistCount > 0 ? "var(--color-text-primary)" : "none"} />
+            <div 
+              style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }} 
+              onClick={() => onPageChange('wishlist')}
+              className={pulseWishlist ? 'icon-pulse-active' : ''}
+            >
+              <Heart size={19} fill={wishlistCount > 0 ? "var(--color-text-primary)" : "none"} style={{ transition: 'all 0.3s ease' }} />
               <span style={{ fontSize: '13px', fontWeight: 500, marginLeft: '4px' }}>{wishlistCount}</span>
             </div>
 
             {/* Shopping Bag Icon */}
             <div 
               onClick={onCartClick}
-              style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+              style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }}
+              className={pulseCart ? 'icon-pulse-active' : ''}
             >
-              <ShoppingBag size={19} />
+              <ShoppingBag size={19} style={{ transition: 'all 0.3s ease' }} />
               <span style={{ fontSize: '13px', fontWeight: 500, marginLeft: '4px' }}>{cartCount}</span>
             </div>
           </div>
@@ -531,7 +555,7 @@ export const Header: React.FC<HeaderProps> = ({
                                 {localized.name}
                               </div>
                               <div style={{ fontSize: '13px', color: 'var(--color-text-light)', marginTop: '2px' }}>
-                                ${product.price}
+                                {formatPrice(product.price)}
                               </div>
                             </div>
                           </div>

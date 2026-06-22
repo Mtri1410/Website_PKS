@@ -132,67 +132,69 @@ function AppContent() {
             {language === 'vi' ? 'Đang tải trang...' : 'Loading page...'}
           </div>
         }>
-          {currentPage === 'home' && (
-            <Home 
-              onPageChange={handlePageChange} 
-              onQuickView={handleQuickViewOpen}
-              onAddToBag={addToCart}
-              onCategorySelect={handleCategorySelect}
-              onSelectProduct={handleProductSelect}
-            />
-          )}
-          
-          {currentPage === 'shop' && (
-            <ProductList 
-              onQuickView={handleQuickViewOpen}
-              onAddToBag={addToCart}
-              selectedCategory={selectedCategory}
-              searchQuery={searchQuery}
-              onClearSearch={handleClearSearch}
-              onSelectProduct={handleProductSelect}
-            />
-          )}
+          <div key={currentPage} className="page-fade-in">
+            {currentPage === 'home' && (
+              <Home 
+                onPageChange={handlePageChange} 
+                onQuickView={handleQuickViewOpen}
+                onAddToBag={addToCart}
+                onCategorySelect={handleCategorySelect}
+                onSelectProduct={handleProductSelect}
+              />
+            )}
+            
+            {currentPage === 'shop' && (
+              <ProductList 
+                onQuickView={handleQuickViewOpen}
+                onAddToBag={addToCart}
+                selectedCategory={selectedCategory}
+                searchQuery={searchQuery}
+                onClearSearch={handleClearSearch}
+                onSelectProduct={handleProductSelect}
+              />
+            )}
 
-          {currentPage === 'product-detail' && activeProductDetail && (
-            <ProductDetail
-              product={activeProductDetail}
-              onBack={() => handlePageChange('shop')}
-              onAddToBag={addToCart}
-              onSelectProduct={handleProductSelect}
-            />
-          )}
+            {currentPage === 'product-detail' && activeProductDetail && (
+              <ProductDetail
+                product={activeProductDetail}
+                onBack={() => handlePageChange('shop')}
+                onAddToBag={addToCart}
+                onSelectProduct={handleProductSelect}
+              />
+            )}
 
-          {currentPage === 'cart' && (
-            <Cart 
-              cartItems={cartItems}
-              onUpdateQuantity={updateQuantity}
-              onRemoveItem={removeItem}
-              onClearCart={clearCart}
-              onPageChange={handlePageChange}
-              appliedDiscount={discount}
-              onApplyDiscount={setDiscount}
-            />
-          )}
+            {currentPage === 'cart' && (
+              <Cart 
+                cartItems={cartItems}
+                onUpdateQuantity={updateQuantity}
+                onRemoveItem={removeItem}
+                onClearCart={clearCart}
+                onPageChange={handlePageChange}
+                appliedDiscount={discount}
+                onApplyDiscount={setDiscount}
+              />
+            )}
 
-          {currentPage === 'search-results' && (
-            <SearchResults 
-              products={searchedProducts}
-              query={searchQuery}
-              onQuickView={handleQuickViewOpen}
-              onAddToBag={addToCart}
-              onPageChange={handlePageChange}
-              onSelectProduct={handleProductSelect}
-            />
-          )}
+            {currentPage === 'search-results' && (
+              <SearchResults 
+                products={searchedProducts}
+                query={searchQuery}
+                onQuickView={handleQuickViewOpen}
+                onAddToBag={addToCart}
+                onPageChange={handlePageChange}
+                onSelectProduct={handleProductSelect}
+              />
+            )}
 
-          {currentPage === 'wishlist' && (
-            <Wishlist
-              onQuickView={handleQuickViewOpen}
-              onAddToBag={addToCart}
-              onPageChange={handlePageChange}
-              onSelectProduct={handleProductSelect}
-            />
-          )}
+            {currentPage === 'wishlist' && (
+              <Wishlist
+                onQuickView={handleQuickViewOpen}
+                onAddToBag={addToCart}
+                onPageChange={handlePageChange}
+                onSelectProduct={handleProductSelect}
+              />
+            )}
+          </div>
         </Suspense>
       </main>
 

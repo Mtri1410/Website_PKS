@@ -15,12 +15,13 @@ interface LanguageContextType {
     howToUse: string;
     ingredients: string;
   };
+  formatPrice: (priceInUSD: number) => string;
 }
 
 const translations = {
   vi: {
     // Header
-    'announcement_bar': 'Miễn phí giao hàng tiêu chuẩn cho đơn hàng từ $95 trở lên. ',
+    'announcement_bar': 'Miễn phí giao hàng tiêu chuẩn cho đơn hàng từ {threshold} trở lên. ',
     'shop_now_link': 'Mua ngay',
     'nav_shop': 'Cửa hàng',
     'nav_new_arrivals': 'Hàng mới về',
@@ -94,7 +95,7 @@ const translations = {
     'filter_clear_all': 'Xóa tất cả',
     'filter_size': 'Kích cỡ',
     'filter_color': 'Màu sắc',
-    'filter_max_price': 'Giá tối đa: ${price}',
+    'filter_max_price': 'Giá tối đa: {price}',
     'sort_featured': 'Nổi bật',
     'sort_price_low': 'Giá: Thấp - Cao',
     'sort_price_high': 'Giá: Cao - Thấp',
@@ -184,7 +185,7 @@ const translations = {
   },
   en: {
     // Header
-    'announcement_bar': 'Complimentary U.S. No-Rush Shipping on orders of $95 or more. ',
+    'announcement_bar': 'Complimentary U.S. No-Rush Shipping on orders of {threshold} or more. ',
     'shop_now_link': 'Shop now',
     'nav_shop': 'Shop',
     'nav_new_arrivals': 'New Arrivals',
@@ -258,7 +259,7 @@ const translations = {
     'filter_clear_all': 'Clear all',
     'filter_size': 'Size',
     'filter_color': 'Color',
-    'filter_max_price': 'Max Price: ${price}',
+    'filter_max_price': 'Max Price: {price}',
     'sort_featured': 'Featured',
     'sort_price_low': 'Price: Low - High',
     'sort_price_high': 'Price: High - Low',
@@ -306,7 +307,7 @@ const translations = {
     'order_discount': 'Discount ({percentage}%)',
     'order_shipping_fee': 'Shipping Fee',
     'order_shipping_free': 'FREE',
-    'order_shipping_note': 'Add ${amount} more for free shipping.',
+    'order_shipping_note': 'Add {amount} more for free shipping.',
     'order_grand_total': 'Grand Total',
     'proceed_to_checkout': 'Proceed to Checkout',
 
@@ -395,8 +396,16 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
   };
 
+  const formatPrice = (priceInUSD: number): string => {
+    if (language === 'vi') {
+      const converted = priceInUSD * 25000;
+      return `${converted.toLocaleString('vi-VN')} đ`;
+    }
+    return `$${priceInUSD.toLocaleString('en-US')}`;
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, tProduct }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, tProduct, formatPrice }}>
       {children}
     </LanguageContext.Provider>
   );

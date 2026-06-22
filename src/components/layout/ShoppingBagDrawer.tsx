@@ -23,11 +23,7 @@ export const ShoppingBagDrawer: React.FC<ShoppingBagDrawerProps> = ({
 }) => {
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
-  const { language, t, tProduct } = useLanguage();
-
-  const formatPrice = (price: number) => {
-    return `$${price}`;
-  };
+  const { language, t, tProduct, formatPrice } = useLanguage();
 
   const colorTranslationMap: Record<string, string> = {
     'Oatmeal': 'Màu yến mạch',

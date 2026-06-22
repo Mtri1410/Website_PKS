@@ -21,7 +21,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState<ColorOption | null>(null);
 
-  const { language, t, tProduct } = useLanguage();
+  const { language, t, tProduct, formatPrice } = useLanguage();
 
   // Sync state on product load
   useEffect(() => {
@@ -139,7 +139,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
           {/* Price */}
           <div style={{ fontSize: '16px', fontWeight: 500, marginBottom: '24px' }}>
-            ${product.price}
+            {formatPrice(product.price)}
           </div>
 
           {/* Color Selector */}

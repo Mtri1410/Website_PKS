@@ -36,7 +36,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   onSelectProduct
 }) => {
 
-  const { language, t, tProduct } = useLanguage();
+  const { language, t, tProduct, formatPrice } = useLanguage();
   const { toggleWishlist, isInWishlist } = useCart();
 
   return (
@@ -128,7 +128,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
                     {localized.name}
                   </span>
                   <span className="product-price" style={{ fontSize: '14px', fontWeight: 500 }}>
-                    ${product.price}
+                    {formatPrice(product.price)}
                   </span>
                   
                   {/* Render color choices dots if they have multiple colors */}
